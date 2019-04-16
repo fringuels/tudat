@@ -1504,6 +1504,26 @@ std::shared_ptr< MinimumElevationAngleCalculator > createMinimumElevationAngleCa
         const std::shared_ptr< ObservationViabilitySettings > observationViabilitySettings,
         const std::string& stationName );
 
+//! Function to create an object to check if a maximum elevation angle condition is met for an observation
+/*!
+ * Function to create an object to check if a maximum elevation angle condition is met for an observation
+ * \param bodyMap Map of body objects that constitutes the environment
+ * \param linkEnds Link ends for which viability check object is to be made
+ * \param observationType Type of observable for which viability check object is to be made
+ * \param observationViabilitySettings Object that defines the settings for the creation of the viability check creation
+ * (settings must be compatible with maximum elevation angle check).  Ground station must ve specified by
+ * associatedLinkEnd_.second in observationViabilitySettings.
+ * \param stationName Name of the ground station for which calculator is to be computed (if no station is explicitly given in
+ * observationViabilitySettings).
+ * \return Object to check if a maximum elevation angle condition is met for an observation
+ */
+std::shared_ptr< MaximumElevationAngleCalculator > createMaximumElevationAngleCalculator(
+        const simulation_setup::NamedBodyMap& bodyMap,
+        const LinkEnds linkEnds,
+        const ObservableType observationType,
+        const std::shared_ptr< ObservationViabilitySettings > observationViabilitySettings,
+        const std::string& stationName );
+
 //! Function to create an object to check if a body avoidance angle condition is met for an observation
 /*!
  * Function to create an object to check if a body avoidance angle condition is met for an observation

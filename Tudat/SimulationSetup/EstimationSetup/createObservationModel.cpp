@@ -277,6 +277,53 @@ std::shared_ptr< MinimumElevationAngleCalculator > createMinimumElevationAngleCa
                 minimumElevationAngle, pointingAngleCalculator );
 }
 
+//! Function to create an object to check if a maximum elevation angle condition is met for an observation
+std::shared_ptr< MaximumElevationAngleCalculator > createMaximumElevationAngleCalculator(
+        const simulation_setup::NamedBodyMap& bodyMap,
+        const LinkEnds linkEnds,
+        const ObservableType observationType,
+        const std::shared_ptr< ObservationViabilitySettings > observationViabilitySettings,
+        const std::string& stationName )
+{
+    if( observationViabilitySettings->observationViabilityType_ != maximum_elevation_angle )
+    {
+        throw std::runtime_error( "Error when making maximum elevation angle calculator, inconsistent input" );
+    }
+
+    // If specific link end is specified
+    std::string groundStationNameToUse;
+    if( observationViabilitySettings->getAssociatedLinkEnd( ).second != "" )
+    {
+        if( groundStationNameToUse != stationName )
+        {
+            throw std::runtime_error( "Error when making maximum elevation angle calculator, inconsistent station input" );
+        }
+        groundStationNameToUse = observationViabilitySettings->getAssociatedLinkEnd( ).second;
+    }
+    else
+    {
+        groundStationNameToUse = stationName;
+    }
+
+    if( bodyMap.count( observationViabilitySettings->getAssociatedLinkEnd( ).first ) == 0 )
+    {
+        throw std::runtime_error( "Error when making maximum elevation angle calculator, body " +
+                                  observationViabilitySettings->getAssociatedLinkEnd( ).first + " not found." );
+    }
+
+    // Retrieve pointing angles calculator
+    std::shared_ptr< ground_stations::PointingAnglesCalculator > pointingAngleCalculator =
+            bodyMap.at( observationViabilitySettings->getAssociatedLinkEnd( ).first )->
+            getGroundStation( groundStationNameToUse )->getPointingAnglesCalculator( );
+
+    // Create check object
+    double maximumElevationAngle = observationViabilitySettings->getDoubleParameter( );
+    return std::make_shared< MaximumElevationAngleCalculator >(
+                getLinkEndIndicesForObservationViability(
+                    linkEnds,observationType, observationViabilitySettings->getAssociatedLinkEnd( ) ),
+                maximumElevationAngle, pointingAngleCalculator );
+}
+
 //! Function to create an object to check if a body avoidance angle condition is met for an observation
 std::shared_ptr< BodyAvoidanceAngleCalculator > createBodyAvoidanceAngleCalculator(
         const simulation_setup::NamedBodyMap& bodyMap,
@@ -383,6 +430,33 @@ std::vector< std::shared_ptr< ObservationViabilityCalculator > > createObservati
             {
                 linkViabilityCalculators.push_back(
                             createMinimumElevationAngleCalculator(
+                                bodyMap, linkEnds, observationType, relevantObservationViabilitySettings.at( i ),
+                                listOfGroundStations.at( j ) ) );
+            }
+            break;
+        }
+        case maximum_elevation_angle:
+        {
+            // Create list of ground stations for which elevation angle check is to be made.
+            std::vector< std::string > listOfGroundStations;
+            for( LinkEnds::const_iterator linkEndIterator = linkEnds.begin( );
+                 linkEndIterator != linkEnds.end( ); linkEndIterator++ )
+            {
+                if( linkEndIterator->second.first == relevantObservationViabilitySettings.at( i )->getAssociatedLinkEnd( ).first )
+                {
+                    if( std::find( listOfGroundStations.begin( ), listOfGroundStations.end( ), linkEndIterator->second.second ) ==
+                            listOfGroundStations.end( ) )
+                    {
+                        listOfGroundStations.push_back( linkEndIterator->second.second );
+                    }
+                }
+            }
+
+            // Create elevation angle check separately for eah ground station: check requires different pointing angles calculator
+            for( unsigned int j = 0; j < listOfGroundStations.size( ); j++ )
+            {
+                linkViabilityCalculators.push_back(
+                            createMaximumElevationAngleCalculator(
                                 bodyMap, linkEnds, observationType, relevantObservationViabilitySettings.at( i ),
                                 listOfGroundStations.at( j ) ) );
             }

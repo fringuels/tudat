@@ -73,6 +73,29 @@ bool MinimumElevationAngleCalculator::isObservationViable(
     return isObservationPossible;
 }
 
+//! Function for determining whether the elevation angle at station is below the constraint to allow observation
+bool MaximumElevationAngleCalculator::isObservationViable(
+        const std::vector< Eigen::Vector6d >& linkEndStates,
+        const std::vector< double >& linkEndTimes )
+{
+    bool isObservationPossible = 1;
+
+    // Iterate over all sets of entries of input vector for which elvation angle is to be checked.
+    for( unsigned int i = 0; i < linkEndIndices_.size( ); i++ )
+    {
+        // Check if elevation angle criteria is met for current link.
+        if( ground_stations::isTargetInViewMaxElevation(
+                    linkEndTimes.at( linkEndIndices_.at( i ).first ),
+                    ( linkEndStates.at( linkEndIndices_.at( i ).second ) - linkEndStates.at( linkEndIndices_.at( i ).first ) )
+                    .segment( 0, 3 ), pointingAngleCalculator_, maximumElevationAngle_ ) == 0 )
+        {
+            isObservationPossible = 0;
+        }
+    }
+
+    return isObservationPossible;
+}
+
 //! Function for determining whether the avoidance angle to a given body at station is sufficient to allow observation.
 bool BodyAvoidanceAngleCalculator::isObservationViable( const std::vector< Eigen::Vector6d >& linkEndStates,
                                                         const std::vector< double >& linkEndTimes )

@@ -115,6 +115,20 @@ bool isTargetInView(
         const double time, const Eigen::Vector3d targetRelativeState,
         const std::shared_ptr< PointingAnglesCalculator > pointingAngleCalculator, const double minimumElevationAngle );
 
+//! Function to check whether a target is visible from a ground station, based on maximum allowed elevation angle.
+/*!
+ * Function to check whether a target is visible from a ground station, based on maximum allowed elevation angle, and the
+ * vector from ground station to target expressed in inertial coordinates
+ * \param time Time at which visibility is to be checked.
+ * \param targetRelativeState Inertial state vector from ground station to target
+ * \param pointingAngleCalculator Object that computes the pointing angles (azimuth/elevation) for a given ground station
+ * \param maximumElevationAngle Maximum elevation angle above which the target is considered 'visible'
+ * \return True if target is visible, false if not.
+ */
+bool isTargetInViewMaxElevation(
+        const double time, const Eigen::Vector3d targetRelativeState,
+        const std::shared_ptr< PointingAnglesCalculator > pointingAngleCalculator, const double maximumElevationAngle );
+
 
 } // namespace ground_stations
 

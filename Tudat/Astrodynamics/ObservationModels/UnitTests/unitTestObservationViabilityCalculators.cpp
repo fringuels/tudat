@@ -502,6 +502,10 @@ BOOST_AUTO_TEST_CASE( testObservationViabilityCalculators )
     double earthMinimumElevationAngle = 4.0 * mathematical_constants::PI / 180.0;
     double marsMinimumElevationAngle = 10.0 * mathematical_constants::PI / 180.0;
 
+    // Define maximum elevation angles for Earth/Mars stations
+     double earthMaximumElevationAngle = 40.0 * mathematical_constants::PI / 180.0;
+     double marsMaximumElevationAngle = 35.0 * mathematical_constants::PI / 180.0;
+
     // Define minimum Sun avoidance angles for Earth/Mars stations
     double earthSunAvoidanceAngle = 30.0 * mathematical_constants::PI / 180.0;
     double marsSunAvoidanceAngle = 21.0 * mathematical_constants::PI / 180.0;
@@ -515,6 +519,12 @@ BOOST_AUTO_TEST_CASE( testObservationViabilityCalculators )
     observationViabilitySettings.push_back( std::make_shared< ObservationViabilitySettings >(
                                                 minimum_elevation_angle, std::make_pair( "Mars", "" ), "",
                                                 marsMinimumElevationAngle ) );
+    observationViabilitySettings.push_back( std::make_shared< ObservationViabilitySettings >(
+                                                maximum_elevation_angle, std::make_pair( "Earth", "" ), "",
+                                                earthMaximumElevationAngle ) );
+    observationViabilitySettings.push_back( std::make_shared< ObservationViabilitySettings >(
+                                                maximum_elevation_angle, std::make_pair( "Mars", "" ), "",
+                                                marsMaximumElevationAngle ) );
     observationViabilitySettings.push_back( std::make_shared< ObservationViabilitySettings >(
                                                 body_avoidance_angle, std::make_pair( "Earth", "" ), "Sun",
                                                 earthSunAvoidanceAngle ) );
@@ -711,6 +721,28 @@ BOOST_AUTO_TEST_CASE( testObservationViabilityCalculators )
                 for( unsigned int l = 0; l < earthElevationAngles.size( ); l++ )
                 {
                     if( earthElevationAngles.at( l ) < earthMinimumElevationAngle )
+                    {
+                        computedViability =  false;
+                    }
+                }
+
+                // Manually recompute mars maximum elevation angle condition
+                std::vector< double > marsMaxElevationAngles = getBodyLinkElevationAngles(
+                            currentLinkEnds, currentObservable, "Mars", linkEndStates, linkEndTimes, bodyMap );
+                for( unsigned int l = 0; l < marsMaxElevationAngles.size( ); l++ )
+                {
+                    if( marsMaxElevationAngles.at( l ) > marsMaximumElevationAngle )
+                    {
+                        computedViability =  false;
+                    }
+                }
+
+                // Manually recompute earth maximum elevation angle condition
+                std::vector< double > earthMaxElevationAngles = getBodyLinkElevationAngles(
+                            currentLinkEnds, currentObservable, "Earth", linkEndStates, linkEndTimes, bodyMap );
+                for( unsigned int l = 0; l < earthMaxElevationAngles.size( ); l++ )
+                {
+                    if( earthMaxElevationAngles.at( l ) > earthMaximumElevationAngle )
                     {
                         computedViability =  false;
                     }
