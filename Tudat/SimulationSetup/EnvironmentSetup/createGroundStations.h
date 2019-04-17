@@ -102,6 +102,25 @@ void createGroundStation(
         const std::string& bodyName,
         const std::shared_ptr< GroundStationSettings > groundStationSettings );
 
+//! Function to create a ground station from GS_locations_database.txt and add it to a Body object
+/*!
+ * Function to create a ground station from GS_locations_database.txt and add it to a Body object
+ * \param body Body object in which the newly created ground station is to be added.
+ * \param groundStationName ID of ground station (DBNAME) that is to be created
+ */
+void createGroundStation(
+        const std::shared_ptr< Body >& body,
+        const std::string groundStationName );
+
+//! Function to create a set of ground stations from GS_locations_database.txt and add it to a Body object
+/*!
+ * Function to create a set of ground stations from GS_locations_database.txt and add it to a Body object
+ * \param body Body object in which the newly created ground station is to be added.
+ * \param groundStationNames List of ground stations' ID (DBNAME) that is to be created
+ */
+void createGroundStations(
+        const std::shared_ptr< Body >& body,
+        std::vector< std::string > groundStationNames );
 
 } // namespace simulation_setup
 

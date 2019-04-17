@@ -30,6 +30,7 @@ set(INPUTOUTPUT_SOURCES
   "${SRCROOT}${INPUTOUTPUTDIR}/multiDimensionalArrayReader.cpp"
   "${SRCROOT}${INPUTOUTPUTDIR}/aerodynamicCoefficientReader.cpp"
   "${SRCROOT}${INPUTOUTPUTDIR}/tabulatedAtmosphereReader.cpp"
+  "${SRCROOT}${INPUTOUTPUTDIR}/groundStationsDatabaseReader.cpp"
 )
 
 # Add header files.
@@ -64,6 +65,7 @@ set(INPUTOUTPUT_HEADERS
   "${SRCROOT}${INPUTOUTPUTDIR}/aerodynamicCoefficientReader.h"
   "${SRCROOT}${INPUTOUTPUTDIR}/readHistoryFromFile.h"
   "${SRCROOT}${INPUTOUTPUTDIR}/tabulatedAtmosphereReader.h"
+  "${SRCROOT}${INPUTOUTPUTDIR}/groundStationsDatabaseReader.h"
 )
 
 # Add unit test files.

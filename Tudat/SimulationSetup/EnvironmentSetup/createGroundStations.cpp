@@ -10,6 +10,7 @@
 
 #include "Tudat/SimulationSetup/EnvironmentSetup/createGroundStations.h"
 #include "Tudat/Astrodynamics/Ephemerides/rotationalEphemeris.h"
+#include "Tudat/InputOutput/groundStationsDatabaseReader.h"
 
 namespace tudat
 {
@@ -78,6 +79,33 @@ void createGroundStation(
         createGroundStation( body, groundStationSettings->getStationName( ),
                              groundStationSettings->getGroundStationPosition( ),
                              groundStationSettings->getPositionElementType( ) );
+    }
+}
+
+//! Function to create a ground station from GS_locations_database.txt and add it to a Body object
+void createGroundStation(
+        const std::shared_ptr< Body >& body,
+        const std::string groundStationName )
+{
+    input_output::groundStationsDatabaseReader groundStationsDatabaseReader;
+    Eigen::Vector3d groundStationPosition = groundStationsDatabaseReader.getGroundStationPositionfromDatabase( groundStationName );
+
+    createGroundStation( body, groundStationName, std::make_shared< ground_stations::GroundStationState >(
+                             groundStationPosition, coordinate_conversions::cartesian_position, body->getShapeModel( ) ) );
+
+}
+
+//! Function to create a set of ground stations from GS_locations_database.txt and add it to a Body object
+void createGroundStations(
+        const std::shared_ptr< Body >& body,
+        std::vector< std::string > groundStationNames )
+{
+    for( unsigned int i = 0; i < groundStationNames.size( ) ; i++ )
+    {
+        input_output::groundStationsDatabaseReader groundStationsDatabaseReader;
+        Eigen::Vector3d groundStationPosition = groundStationsDatabaseReader.getGroundStationPositionfromDatabase( groundStationNames.at( i ) );
+        createGroundStation( body, groundStationNames.at( i ), std::make_shared< ground_stations::GroundStationState >(
+                                 groundStationPosition, coordinate_conversions::cartesian_position, body->getShapeModel( ) ) );
     }
 }
 
