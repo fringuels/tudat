@@ -78,7 +78,7 @@ void groundStationsDatabaseReader::parser(const std::string &inputDataFile )
                 auto delimiterPos2 = line.find( "END" );
                 auto delimiterPos3 = line.find( "AXISOFF" );
 
-                auto one = line.substr( 0, delimiterPos1 - 1);
+                auto one = line.substr( 0, delimiterPos1 );
                 auto two = line.substr( delimiterPos1, delimiterPos2 - delimiterPos1 );
                 auto three = line.substr( delimiterPos2, delimiterPos3 - delimiterPos2 );
                 auto four = line.substr( delimiterPos3 );
@@ -91,7 +91,7 @@ void groundStationsDatabaseReader::parser(const std::string &inputDataFile )
                 auto delimiterPos2 = line.find( "AXISTYPE" );
                 auto delimiterPos3 = line.find( "AXISOFF" );
 
-                auto one = line.substr( 0, delimiterPos1 - 1);
+                auto one = line.substr( 0, delimiterPos1 );
                 auto two = line.substr( delimiterPos1, delimiterPos2 - delimiterPos1 );
                 auto three = line.substr( delimiterPos2, delimiterPos3 - delimiterPos2 );
                 auto four = line.substr( delimiterPos3 );
@@ -103,7 +103,7 @@ void groundStationsDatabaseReader::parser(const std::string &inputDataFile )
                 auto delimiterPos1 = line.find( "AXISTYPE" );
                 auto delimiterPos2 = line.find( "AXISOFF" );
 
-                auto one = line.substr( 0, delimiterPos1 - 1);
+                auto one = line.substr( 0, delimiterPos1 );
                 auto two = line.substr( delimiterPos1, delimiterPos2 - delimiterPos1 );
                 auto three = line.substr( delimiterPos2 );
 
@@ -114,7 +114,7 @@ void groundStationsDatabaseReader::parser(const std::string &inputDataFile )
                 auto delimiterPos2 = line.find( "Y=" );
                 auto delimiterPos3 = line.find( "Z=" );
 
-                auto one = line.substr( 0, delimiterPos2 - 1 );
+                auto one = line.substr( 0, delimiterPos2 );
                 auto two = line.substr( delimiterPos2, delimiterPos3 - delimiterPos2 );
                 auto three = line.substr( delimiterPos3 );
 
@@ -126,7 +126,7 @@ void groundStationsDatabaseReader::parser(const std::string &inputDataFile )
                 auto delimiterPos3 = line.find( "DZDT=" );
                 auto delimiterPos4 = line.find( "EPOCH=" );
 
-                auto one = line.substr( 0, delimiterPos2 - 1 );
+                auto one = line.substr( 0, delimiterPos2 );
                 auto two = line.substr( delimiterPos2, delimiterPos3 - delimiterPos2) ;
                 auto three = line.substr( delimiterPos3, delimiterPos4 - delimiterPos3 );
                 auto four = line.substr( delimiterPos4 );
@@ -144,6 +144,7 @@ void groundStationsDatabaseReader::parser(const std::string &inputDataFile )
         std::cerr << "Couldn't open temporaryFile.txt for reading.\n";
     }
     writeFile2.close();
+//    remove( parsedFilePath_ + "temporaryFile.txt" );
     remove( "/Users/valeriofilice/Tudat/tudatBundle/tudat/Tudat/External/GroundStationDatabase/temporaryFile.txt" );
 }
 
